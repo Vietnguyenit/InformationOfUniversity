@@ -1,0 +1,45 @@
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+
+public class datalistviewmain extends AppCompatActivity {
+
+    final String DATABASE_NAME = "DatabaseEx.sqlite";
+    SQLiteDatabase database;
+
+    ListView listView;
+    ArrayList<DatalistView> list;
+    AdapterDatabase adapterDatabase;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.datalistviewmain);
+
+        addControl();
+        readData();
+    }
+
+    private void addControl() {
+        listView = (ListView) findViewById(R.id.listview);
+        list = new ArrayList<>();
+        adapterDatabase = new AdapterDatabase(this, list);
+        listView.setAdapter(adapterDatabase);
+    }
+    private void readData(){
+        database = ConnectDatabase.sqLiteDatabase(this , DATABASE_NAME);
+        Cursor cursor = database.rawQuery("SELECT * FROM UNIVERSITYNAME" , null);
+        list.clear();
+        for(int i = 0 ; i< cursor.getCount(); i++){
+            cursor.moveToPosition(i);
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            list.add(new DatalistView(id , name));
+        }
+        adapterDatabase.notifyDataSetChanged();
+    }
+}
