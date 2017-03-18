@@ -1,0 +1,33 @@
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
+
+public class displayInformation extends AppCompatActivity {
+
+    AutoCompleteTextView autoCtv;
+    final String DATABASE_NAME = "DatabaseEx.sqlite";
+    SQLiteDatabase database;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_information);
+        database = ConnectDatabase.sqLiteDatabase(this , DATABASE_NAME);
+        Cursor cursor = database.rawQuery("SELECT * FROM UNIVERSITYNAME" , null);
+        cursor.moveToFirst();
+        Toast.makeText(this , cursor.getString(2), Toast.LENGTH_LONG).show();
+
+        DataautoCtv();
+    }
+
+    private void DataautoCtv() {
+        autoCtv = (AutoCompleteTextView)findViewById(R.id.autoCompleteTextView);
+        String[] ChooseSchool = getResources().getStringArray(R.array.ChooseSchool);
+        ArrayAdapter<String> adtChooseSchool =
+                new ArrayAdapter<String>(displayInformation.this , android.R.layout.simple_list_item_1, ChooseSchool );
+        autoCtv.setAdapter(adtChooseSchool);
+    }
+}
